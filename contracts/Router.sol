@@ -1,5 +1,7 @@
 pragma solidity ^0.8.4;
 
+import "./Interfaces/ERC20.sol";
+
 contract Router {
     address public immutable override factory;
     address public immutable override WETH;
@@ -9,7 +11,9 @@ contract Router {
         WETH = _WETH;
     }
 
-    function swap(address from, address to, uint256 slippage) external {
+    function swap(ERC20 from, ERC20 to, uint256 amount, uint256 slippage) external {
+        from.transferFrom(address(this), amount);
 
+        // @TODO FIND THE BEST EXCHANGE
     }
 }
