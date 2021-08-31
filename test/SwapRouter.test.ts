@@ -36,5 +36,8 @@ describe("SwapRouter", function () {
 
     it("should allow swapping", async function () {
         expect(router.swap(swaps, path, amount, 20)).to.not.be.reverted;
+
+        let erc20 = await ethers.getContractAt("ERC20", path[path.length - 1]);
+        expect((await erc20.balanceOf(router.address)).toNumber()).to.be.gt(0)
     })
 })
