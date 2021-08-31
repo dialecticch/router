@@ -1,12 +1,25 @@
 {
-  "name": "hardhat-project",
+  "name": "@dialecticch/router",
   "devDependencies": {
-    "@uniswap/v2-periphery": "^1.1.0-beta.0",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "chai": "^4.3.4",
     "ethereum-waffle": "^3.4.0",
     "ethers": "^5.4.4",
-    "hardhat": "^2.5.0"
+    "hardhat": "^2.5.0",
+    "solc": "0.7.6",
+    "solhint": "^3.3.2",
+    "solhint-plugin-prettier": "^0.0.5",
+    "solidity-coverage": "^0.7.16"
+  },
+  "scripts": {
+    "build": "hardhat compile",
+    "test": "hardhat test",
+    "coverage": "hardhat coverage",
+    "lint": "npm run lint:sol",
+    "lint:sol": "solhint 'contracts/**/*.sol'",
+    "fmt": "npm run fmt:sol && npm run fmt:ts",
+    "fmt:sol": "prettier 'contracts/**/*.sol' -w",
+    "fmt:ts": "prettier --write 'test/**/*.ts'"
   }
 }
