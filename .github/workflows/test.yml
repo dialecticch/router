@@ -21,7 +21,7 @@ jobs:
         uses: actions/setup-node@v1
         with:
           node-version: ${{ matrix.node-version }}
-      env:
-        ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
+        env:
+          ALCHEMY_API_KEY: ${{ secrets.ALCHEMY_API_KEY }}
       - run: npm install
       - run: npm run test
