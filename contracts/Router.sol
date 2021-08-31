@@ -3,22 +3,55 @@ pragma solidity ^0.8.4;
 import "./Interfaces/ERC20.sol";
 import "./Interfaces/UniswapV2.sol";
 
-contract Router {
+contract SwapRouter {
+    address public immutable self;
 
-    UniswapV2 public constant UNI = UniswapV2(0x0);
-    UniswapV2 public constant SUSHI = UniswapV2(0x0);
-
-    ERC20 public constant WETH = WETH(0x0);
-
-    address public immutable override factory;
-
-    constructor(address _factory) {
-        factory = _factory;
+    modifier onlyDelegateCall() {
+        require(address(this) != self);
     }
 
-    function swap(ERC20 from, ERC20 to, uint256 amount, uint256 slippage) external {
-        from.transferFrom(address(this), amount);
-
-        // @TODO FIND THE BEST EXCHANGE
+    constructor() {
+        self = address(this);
     }
+
+    function swap(UniswapV2[] swaps, address[] memory path, uint256 amount, uint256 slippage) external onlyDelegateCall {
+        (UniswapV2 swap, uint256 amountOut) = dataForBestExchange(swaps, path, amount);
+
+        swap.swapExactTokensForTokens(
+            amount,
+            (amountOut * (1000 - slippage)) / 1000,
+            path,
+            address(this),
+            block.timestamp + 180
+        );
+    }
+
+    function dataForBestExchange(UniswapV2[] swaps, address[] memory path, uint256 amount) internal returns (UniswapV2, uint256) {
+        UniswapV2 bestExchange;
+        uint256 bestAmount;
+
+        uint256 length = swaps.length;
+        for (uint256 i = 0; i < length; i++) {
+            out = amountOutFor(swaps[i], path, amount);
+            if (out > bestAmount) {
+                bestExchange = swaps[i];
+                bestAmount = out;
+            }
+        }
+
+        return (bestExchange, bestAmount);
+    }
+
+    function amountOutFor(
+        Uniswap exchange,
+        address[] memory path,
+        uint256 amountIn
+    ) internal view returns (uint256) {
+        try exchange.getAmountsOut(amountIn, path) returns (uint256[] memory amountsOut) {
+            return amountsOut[amountsOut.length - 1];
+        } catch {
+            return 0;
+        }
+    }
+
 }
