@@ -1,7 +1,5 @@
 # Router
 
-![GitHub](https://img.shields.io/github/license/dialecticch/router)
-
 This repository contains `SwapRouter`, a very simple router to exchange tokens for the best price on any `UniswapV2`
 like AMM.
 
