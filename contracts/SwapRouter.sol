@@ -1,3 +1,4 @@
+// SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
 import "./Interfaces/ERC20.sol";
@@ -45,11 +46,17 @@ library SwapRouter {
         return out;
     }
 
+    /// @dev Returns the best exchange and price for a specific swap.
+    /// @param swaps The exchanges to choose from.
+    /// @param path The path for the swap.
+    /// @param amount The amount of tokens to sell.
+    /// @return The exchange.
+    /// @return The amount expected.
     function dataForBestExchange(
         UniswapV2[] memory swaps,
         address[] memory path,
         uint256 amount
-    ) private view returns (UniswapV2, uint256) {
+    ) internal view returns (UniswapV2, uint256) {
         UniswapV2 bestExchange;
         uint256 bestAmount;
 
