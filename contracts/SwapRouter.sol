@@ -23,7 +23,7 @@ library SwapRouter {
     /// @param slippage The max slippage in basis points.
     /// @return The amount of tokens received.
     function swap(
-        UniswapV2[] swaps,
+        UniswapV2[] memory swaps,
         address[] memory path,
         uint256 amount,
         uint256 slippage
@@ -46,7 +46,7 @@ library SwapRouter {
     }
 
     function dataForBestExchange(
-        UniswapV2[] swaps,
+        UniswapV2[] memory swaps,
         address[] memory path,
         uint256 amount
     ) private view returns (UniswapV2, uint256) {
@@ -55,7 +55,7 @@ library SwapRouter {
 
         uint256 length = swaps.length;
         for (uint256 i = 0; i < length; i++) {
-            out = amountOutFor(swaps[i], path, amount);
+            uint256 out = amountOutFor(swaps[i], path, amount);
             if (out > bestAmount) {
                 bestExchange = swaps[i];
                 bestAmount = out;
@@ -66,7 +66,7 @@ library SwapRouter {
     }
 
     function amountOutFor(
-        Uniswap exchange,
+        UniswapV2 exchange,
         address[] memory path,
         uint256 amountIn
     ) private view returns (uint256) {
