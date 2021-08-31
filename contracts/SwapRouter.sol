@@ -5,6 +5,7 @@ import "./Interfaces/UniswapV2.sol";
 
 /// @title SwapRouter
 /// @dev A simple wrapper that selects the exchange with the best price and trades tokens on it.
+///      Currently only works for exchanges compatible with the `UniswapV2` interface.
 /// @author Dialectic
 library SwapRouter {
     /// @dev Emitted after a trade occurs.
