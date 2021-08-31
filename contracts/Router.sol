@@ -3,18 +3,9 @@ pragma solidity ^0.8.4;
 import "./Interfaces/ERC20.sol";
 import "./Interfaces/UniswapV2.sol";
 
-contract SwapRouter {
-    address public immutable self;
+library SwapRouter {
 
-    modifier onlyDelegateCall() {
-        require(address(this) != self);
-    }
-
-    constructor() {
-        self = address(this);
-    }
-
-    function swap(UniswapV2[] swaps, address[] memory path, uint256 amount, uint256 slippage) external onlyDelegateCall {
+    function swap(UniswapV2[] swaps, address[] memory path, uint256 amount, uint256 slippage) internal {
         (UniswapV2 swap, uint256 amountOut) = dataForBestExchange(swaps, path, amount);
 
         swap.swapExactTokensForTokens(
@@ -26,7 +17,7 @@ contract SwapRouter {
         );
     }
 
-    function dataForBestExchange(UniswapV2[] swaps, address[] memory path, uint256 amount) internal returns (UniswapV2, uint256) {
+    function dataForBestExchange(UniswapV2[] swaps, address[] memory path, uint256 amount) private view returns (UniswapV2, uint256) {
         UniswapV2 bestExchange;
         uint256 bestAmount;
 
@@ -46,7 +37,7 @@ contract SwapRouter {
         Uniswap exchange,
         address[] memory path,
         uint256 amountIn
-    ) internal view returns (uint256) {
+    ) private view returns (uint256) {
         try exchange.getAmountsOut(amountIn, path) returns (uint256[] memory amountsOut) {
             return amountsOut[amountsOut.length - 1];
         } catch {
